@@ -5,29 +5,27 @@ import (
 	"os"
     "os/exec"
     "runtime"
+	"math/rand"
+    "sort"
+    "time"
 )
 
 const nmax int = 1000
 type tabstring [nmax]string
+type tabint [nmax]int
 type tabnilai [nmax]nilaisoal
+type Jadwal struct {
+    Hari   string
+    Jam    int
+    Materi string
+}
 type nilaisoal struct {
 	tipe  string
 	nilai int
 }
 var latsol tabnilai
+var totaljam int
 
-func clearScreen() {
-    switch runtime.GOOS {
-    case "windows":
-        cmd := exec.Command("cmd", "/c", "cls")
-        cmd.Stdout = os.Stdout
-        cmd.Run()
-    default:
-        cmd := exec.Command("clear")
-        cmd.Stdout = os.Stdout
-        cmd.Run()
-    }
-}
 func main() {
 	var logreg int
 	var usn, pass string
@@ -49,6 +47,18 @@ func main() {
 	}
 }
 
+func clearScreen() {
+    switch runtime.GOOS {
+    case "windows":
+        cmd := exec.Command("cmd", "/c", "cls")
+        cmd.Stdout = os.Stdout
+        cmd.Run()
+    default:
+        cmd := exec.Command("clear")
+        cmd.Stdout = os.Stdout
+        cmd.Run()
+    }
+}
 func early(logreg *int) {
 	fmt.Println("\n===================================================")
 	fmt.Printf("%30s\n", "SELAMAT DATANG")
@@ -110,11 +120,19 @@ func inter(menu *int) {
 }
 
 func inmenu(menu int) {
-	if menu == 3 {
-		soal()
-	} else if menu == 5 {
-		selectionSortNilai(&latsol)
-		cetaknilai(latsol)
+	var materi tabstring
+	switch menu{
+		case 3:
+			soal()
+		case 4:
+			materiLen := IsiMateri(&materi)
+			fmt.Println("Masukkan Total Jam Dalam Seminggu Untuk Belajar:")
+			fmt.Scan(&totaljam)
+    		Schedule(totaljam, materi, materiLen)
+		case 5:
+			cetaknilai(latsol)
+		default:
+			fmt.Println("Menu belum tersedia untuk pilihan ini.")
 	}
 }
 
@@ -635,3 +653,102 @@ func array(l *tabnilai){
 		l[6].nilai=temp
 	}
 }
+
+func Schedule(totalHours int, materi tabstring, materiLen int) {
+    rand.Seed(time.Now().UnixNano())
+
+    const startHour = 8
+    const endHour = 22
+
+    days := [7]string{"Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"}
+
+    // Buat array jam langsung
+    var hours [endHour - startHour]int
+    for i := 0; i < len(hours); i++ {
+        hours[i] = startHour + i
+    }
+
+    maxSlots := len(days) * len(hours)
+    if totalHours > maxSlots {
+        fmt.Printf("Jumlah jam terlalu banyak. Maksimal tersedia %d jam.\n", maxSlots)
+        return
+    }
+
+    var jadwal [nmax]Jadwal
+    jadwalLen := 0
+
+    isDuplicate := func(day string, hour int) bool {
+        for i := 0; i < jadwalLen; i++ {
+            if jadwal[i].Hari == day && jadwal[i].Jam == hour {
+                return true
+            }
+        }
+        return false
+    }
+
+    for count := 0; count < totalHours; {
+        day := days[rand.Intn(len(days))]
+        hour := hours[rand.Intn(len(hours))]
+        if !isDuplicate(day, hour) {
+            topic := materi[rand.Intn(materiLen)]
+            jadwal[jadwalLen] = Jadwal{Hari: day, Jam: hour, Materi: topic}
+            jadwalLen++
+            count++
+        }
+    }
+
+    sort.Slice(jadwal[:jadwalLen], func(i, j int) bool {
+        dayIndex := func(day string) int {
+            for idx, d := range days {
+                if d == day {
+                    return idx
+                }
+            }
+            return -1
+        }
+        di := dayIndex(jadwal[i].Hari)
+        dj := dayIndex(jadwal[j].Hari)
+        if di != dj {
+            return di < dj
+        }
+        return jadwal[i].Jam < jadwal[j].Jam
+    })
+
+    fmt.Println("\n====================================")
+    fmt.Println("     Jadwal Belajar Mingguan     ")
+    fmt.Println("====================================")
+
+    currentDay := ""
+    for i := 0; i < jadwalLen; i++ {
+        if jadwal[i].Hari != currentDay {
+            currentDay = jadwal[i].Hari
+            fmt.Printf("\n%s:\n", currentDay)
+        }
+        fmt.Printf("  • %02d:00–%02d:00 : %s\n", jadwal[i].Jam, jadwal[i].Jam+1, jadwal[i].Materi)
+    }
+
+    fmt.Println("\n====================================")
+    fmt.Println("Selamat belajar! Tetap semangat! ")
+    fmt.Println("====================================")
+}
+
+func IsiMateri(materi *tabstring) int {
+    materi[0] = "Tipe Data"
+    materi[1] = "Perulangan"
+    materi[2] = "Percabangan"
+    materi[3] = "Fungsi"
+    materi[4] = "Prosedur"
+    materi[5] = "Rekursif"
+    materi[6] = "Array"
+    return 7 // jumlah materi
+}
+
+
+
+
+
+
+
+
+
+
