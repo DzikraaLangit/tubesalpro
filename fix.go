@@ -8,6 +8,7 @@ import (
 	"math/rand"
     "sort"
     "time"
+	"bufio"
 )
 
 const nmax int = 1000
@@ -44,6 +45,9 @@ func main() {
 	fmt.Scan(&menu)
 	clearScreen()
 	inmenu(menu)
+	if menu!=0{
+		backtomenu()
+	}
 	}
 }
 
@@ -136,6 +140,13 @@ func inmenu(menu int) {
 			fmt.Println("Menu belum tersedia untuk pilihan ini.")
 	}
 }
+func backtomenu(){
+	fmt.Print("Kembali Ke Menu (Enter)")
+	fmt.Scanln()
+	reader := bufio.NewReader(os.Stdin)
+	reader.ReadString('\n')
+	clearScreen()
+}
 
 func cetaknilai(l tabnilai) {
 	fmt.Println("\n=== Nilai Materi Dari Terbesar Hingga Terkecil ===")
@@ -157,7 +168,6 @@ func selectionSortNilai(l *tabnilai) {
 		l[i], l[maxIdx] = l[maxIdx], l[i]
 	}
 }
-
 func soal() {
 	var menu=1
 	var nomer int
