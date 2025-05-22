@@ -15,7 +15,7 @@ const nmax int = 1000
 type tabstring [nmax]string
 type tabint [nmax]int
 type tabnilai [nmax]nilaisoal
-type Jadwal struct {
+type Jadwalsche struct {
     Hari   string
     Jam    int
     Materi string
@@ -135,6 +135,7 @@ func inmenu(menu int) {
 			fmt.Scan(&totaljam)
     		Schedule(totaljam, materi, materiLen)
 		case 5:
+			selectionSortNilai(&latsol)
 			cetaknilai(latsol)
 		default:
 			fmt.Println("Menu belum tersedia untuk pilihan ini.")
@@ -800,7 +801,7 @@ func Schedule(totalHours int, materi tabstring, materiLen int) {
         return
     }
 
-    var jadwal [nmax]Jadwal
+    var jadwal [nmax]Jadwalsche
     jadwalLen := 0
 
     isDuplicate := func(day string, hour int) bool {
@@ -817,7 +818,7 @@ func Schedule(totalHours int, materi tabstring, materiLen int) {
         hour := hours[rand.Intn(len(hours))]
         if !isDuplicate(day, hour) {
             topic := materi[rand.Intn(materiLen)]
-            jadwal[jadwalLen] = Jadwal{Hari: day, Jam: hour, Materi: topic}
+            jadwal[jadwalLen] = Jadwalsche{Hari: day, Jam: hour, Materi: topic}
             jadwalLen++
             count++
         }
