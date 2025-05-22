@@ -24,6 +24,7 @@ func menuCatatan(catatan *tabCatatan, lastID *int) {
 		fmt.Println("4. Cari Catatan")
 		fmt.Println("5. Tampilkan Semua Catatan")
 		fmt.Println("6. Keluar")
+		fmt.Println("7. tes")
 		fmt.Print("Pilih menu: ")
 
 		var pilihan int
@@ -43,6 +44,8 @@ func menuCatatan(catatan *tabCatatan, lastID *int) {
 		case 6:
 			fmt.Println("Keluar dari program.")
 			return
+		case 7:
+			materi()
 		default:
 			fmt.Println("Pilihan tidak valid.")
 		}
@@ -112,7 +115,6 @@ func editCatatan(catatan *tabCatatan, lastID int) {
 
 	reader := bufio.NewReader(os.Stdin)
 	 
-
 	fmt.Print("Masukkan judul catatan yang ingin diedit: ")
 	judulCari, _ := reader.ReadString('\n')
 	judulCari = strings.TrimSpace(judulCari)

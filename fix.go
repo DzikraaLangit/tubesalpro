@@ -56,18 +56,18 @@ func main() {
 	}
 }
 
-func clearScreen() {
-    switch runtime.GOOS {
-    case "windows":
-        cmd := exec.Command("cmd", "/c", "cls")
-        cmd.Stdout = os.Stdout
-        cmd.Run()
-    default:
-        cmd := exec.Command("clear")
-        cmd.Stdout = os.Stdout
-        cmd.Run()
-    }
-}
+// func clearScreen() {
+//     switch runtime.GOOS {
+//     case "windows":
+//         cmd := exec.Command("cmd", "/c", "cls")
+//         cmd.Stdout = os.Stdout
+//         cmd.Run()
+//     default:
+//         cmd := exec.Command("clear")
+//         cmd.Stdout = os.Stdout
+//         cmd.Run()
+//     }
+// }
 func early(logreg *int) {
 	fmt.Println("\n===================================================")
 	fmt.Printf("%30s\n", "SELAMAT DATANG")
