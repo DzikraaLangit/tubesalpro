@@ -25,7 +25,7 @@ type nilaisoal struct {
 	nilai int
 }
 var latsol tabnilai
-var totaljam int
+var totalHours int
 
 func main() {
 	var logreg int
@@ -132,8 +132,8 @@ func inmenu(menu int) {
 		case 4:
 			materiLen := IsiMateri(&materi)
 			fmt.Println("Masukkan Total Jam Dalam Seminggu Untuk Belajar:")
-			fmt.Scan(&totaljam)
-    		Schedule(totaljam, materi, materiLen)
+			fmt.Scan(&totalHours)
+    		Schedule(totalHours, materi, materiLen)
 		case 5:
 			selectionSortNilai(&latsol)
 			cetaknilai(latsol)
