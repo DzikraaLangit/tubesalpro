@@ -10,7 +10,7 @@ type Materi struct{
 
 type tabMateri[7] Materi
 
-func materi(){
+func tampilMateri(){
 	var data tabMateri
 
 	data = tabMateri{
@@ -175,7 +175,7 @@ for _, val := range angka {
 
 			if lanjut != "y" && lanjut != "Y" {
 				lanjutLoop = false
-				fmt.Println("Kembali ke menu utama.")
+				clearScreen()
 			}
 		} else {
 			fmt.Println("Pilihan tidak valid.")

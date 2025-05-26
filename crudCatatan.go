@@ -9,11 +9,7 @@ import (
 )
 
 
-func main() {
-	var data tabCatatan
-	var lastID int
-	menuCatatan(&data, &lastID)
-}
+ 
 
 func menuCatatan(catatan *tabCatatan, lastID *int) {
 	for {
@@ -24,7 +20,6 @@ func menuCatatan(catatan *tabCatatan, lastID *int) {
 		fmt.Println("4. Cari Catatan")
 		fmt.Println("5. Tampilkan Semua Catatan")
 		fmt.Println("6. Keluar")
-		fmt.Println("7. tes")
 		fmt.Print("Pilih menu: ")
 
 		var pilihan int
@@ -44,8 +39,6 @@ func menuCatatan(catatan *tabCatatan, lastID *int) {
 		case 6:
 			fmt.Println("Keluar dari program.")
 			return
-		case 7:
-			materi()
 		default:
 			fmt.Println("Pilihan tidak valid.")
 		}
@@ -74,6 +67,7 @@ func buatCatatan(catatan *tabCatatan, lastID *int) {
 	(*lastID)++
 
 	fmt.Println("Catatan berhasil dibuat.")
+	clearScreen()
 }
 
 func munculcariCatatan(catatan *tabCatatan, lastID int){
@@ -92,6 +86,7 @@ func munculcariCatatan(catatan *tabCatatan, lastID int){
 	fmt.Println("Judul   :", (*catatan)[index].Judul)
     fmt.Println("Tanggal :", (*catatan)[index].tanggal.Format("02-01-2006"))
     fmt.Println("Isi     :", (*catatan)[index].Isi)
+	clearScreen()
 
 }
 
@@ -137,6 +132,7 @@ func editCatatan(catatan *tabCatatan, lastID int) {
 
 	(*catatan)[index] = Catatan{Judul: judulBaru, Isi: isiBaru, tanggal: tanggallama}
 	fmt.Println("Catatan berhasil diedit.")
+	clearScreen()
 }
 
 func hapusCatatan(catatan *tabCatatan, lastID *int) {
@@ -164,6 +160,7 @@ func hapusCatatan(catatan *tabCatatan, lastID *int) {
 	*lastID--
 
 	fmt.Println("Catatan berhasil dihapus.")
+	clearScreen()
 }
 
 func tampilCatatan(catatan *tabCatatan, lastID int) {
