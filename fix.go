@@ -6,8 +6,6 @@ import (
     "os/exec"
     "runtime"
 	"math/rand"
-    "sort"
-    "time"
 	"bufio"
 )
 
@@ -53,25 +51,34 @@ func register(usn, pass *string) {
 	clearScreen()
 }
 
-func login(usn, pass string) {
-	var lusn, lpass string
-	fmt.Println("\n===================================================")
-	fmt.Printf("%27s\n", "LOGIN")
-	fmt.Println("===================================================")
+func login(usn, pass string) bool {
+	var lusn, lpass, choice string
 	for {
+		fmt.Println("\n===================================================")
+		fmt.Printf("%27s\n", "LOGIN")
+		fmt.Println("===================================================")
 		fmt.Print("Masukkan Username : ")
 		fmt.Scan(&lusn)
 		fmt.Print("Masukkan Password : ")
 		fmt.Scan(&lpass)
 
-		if lusn == usn && lpass == pass{
-			break
+		if lusn == usn && lpass == pass {
+			fmt.Println("\nLogin berhasil!\n")
+			clearScreen()
+			return true
 		}
-		fmt.Println("Username atau password salah. Silakan coba lagi.\n")
-	}
-		fmt.Println("\nLogin berhasil!\n")
+		fmt.Println("Username atau password salah.")
+
+		fmt.Print("Coba lagi? (y/n): ")
+		fmt.Scan(&choice)
+		if choice == "n" || choice == "N" {
+			clearScreen()
+			return false
+		}
 		clearScreen()
+	}
 }
+
 
 func inter(menu *int) {
 	fmt.Println("\n===================================================")
@@ -87,15 +94,14 @@ func inter(menu *int) {
 	fmt.Print("Masukkan nomor dari menu: ")
 }
 
-func inmenu(menu int) {
+func inmenu(menu int, data *tabCatatan, lastID *int) {
 	var materi tabstring
-	var data tabCatatan
-	var lastID int
+	
 	switch menu{
 		case 0:
 			fmt.Print("")
 		case 1:
-			menuCatatan(&data, &lastID)
+			menuCatatan(data, lastID)
 		case 2:
 			tampilMateri()
 		case 3:
@@ -142,10 +148,11 @@ func selectionSortNilai(l *tabnilai) {
 }
 
 func Schedule(totalHours int, materi tabstring, materiLen int) {
-    rand.Seed(time.Now().UnixNano())
+    rand.Seed(1)  
+
     const startHour = 8
     const endHour = 22
-    days := [7]string{"Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"}
+    var days = [7]string{"Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"}
     var hours [endHour - startHour]int
     for i := 0; i < len(hours); i++ {
         hours[i] = startHour + i
@@ -160,42 +167,50 @@ func Schedule(totalHours int, materi tabstring, materiLen int) {
     var jadwal [nmax]Jadwalsche
     jadwalLen := 0
 
-    isDuplicate := func(day string, hour int) bool {
+    count := 0
+    for count < totalHours {
+        day := days[rand.Intn(7)]
+        hour := hours[rand.Intn(len(hours))]
+
+        found := 0
         for i := 0; i < jadwalLen; i++ {
             if jadwal[i].Hari == day && jadwal[i].Jam == hour {
-                return true
+                found = found + 1
             }
         }
-        return false
-    }
 
-    for count := 0; count < totalHours; {
-        day := days[rand.Intn(len(days))]
-        hour := hours[rand.Intn(len(hours))]
-        if !isDuplicate(day, hour) {
+        if found == 0 {
             topic := materi[rand.Intn(materiLen)]
             jadwal[jadwalLen] = Jadwalsche{Hari: day, Jam: hour, Materi: topic}
-            jadwalLen++
-            count++
+            jadwalLen = jadwalLen + 1
+            count = count + 1
         }
     }
 
-    sort.Slice(jadwal[:jadwalLen], func(i, j int) bool {
-        dayIndex := func(day string) int {
-            for idx, d := range days {
-                if d == day {
-                    return idx
+    
+    for i := 0; i < jadwalLen-1; i++ {
+        minIdx := i
+        for j := i + 1; j < jadwalLen; j++ {
+            hi := 0
+            hj := 0
+            for k := 0; k < 7; k++ {
+                if jadwal[minIdx].Hari == days[k] {
+                    hi = k
+                }
+                if jadwal[j].Hari == days[k] {
+                    hj = k
                 }
             }
-            return -1
+            if hj < hi || (hj == hi && jadwal[j].Jam < jadwal[minIdx].Jam) {
+                minIdx = j
+            }
         }
-        di := dayIndex(jadwal[i].Hari)
-        dj := dayIndex(jadwal[j].Hari)
-        if di != dj {
-            return di < dj
+        if minIdx != i {
+            temp := jadwal[i]
+            jadwal[i] = jadwal[minIdx]
+            jadwal[minIdx] = temp
         }
-        return jadwal[i].Jam < jadwal[j].Jam
-    })
+    }
 
     fmt.Println("\n====================================")
     fmt.Println("     Jadwal Belajar Mingguan     ")

@@ -156,6 +156,7 @@ for _, val := range angka {
 	lanjutLoop := true
 
 	for lanjutLoop {
+		clearScreen()
 		fmt.Println("\nDaftar Materi:\n")
 		for i := 0; i < len(data); i++ {
 			fmt.Printf("%d. %s (Level %d)\n", i+1, data[i].judul, data[i].level)
@@ -164,6 +165,7 @@ for _, val := range angka {
 		var pilihan int
 		fmt.Print("\nPilih nomor materi yang ingin ditampilkan: ")
 		fmt.Scanln(&pilihan)
+		clearScreen()
 
 		if pilihan >= 1 && pilihan <= len(data) {
 			fmt.Printf("\n=== %s ===\n", data[pilihan-1].judul)

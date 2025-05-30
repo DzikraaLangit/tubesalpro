@@ -13,6 +13,7 @@ import (
 
 func menuCatatan(catatan *tabCatatan, lastID *int) {
 	for {
+
 		fmt.Println("\n--- MENU ---")
 		fmt.Println("1. Buat Catatan")
 		fmt.Println("2. Edit Catatan")
@@ -24,6 +25,7 @@ func menuCatatan(catatan *tabCatatan, lastID *int) {
 
 		var pilihan int
 		fmt.Scanln(&pilihan)
+		clearScreen()
 
 		switch pilihan {
 		case 1:
@@ -67,16 +69,17 @@ func buatCatatan(catatan *tabCatatan, lastID *int) {
 	(*lastID)++
 
 	fmt.Println("Catatan berhasil dibuat.")
-	clearScreen()
+	backtomenu()
 }
 
 func munculcariCatatan(catatan *tabCatatan, lastID int){
 	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Print("Masukkan judul catatan yang ingin diedit: ")
+	fmt.Print("Masukkan judul catatan yang ingin dicari: ")
 	judulCari, _ := reader.ReadString('\n')
 	judulCari = strings.TrimSpace(judulCari)
 	index := cariCatatan(*catatan, lastID, judulCari)
+	clearScreen()
 
 	if index == -1 {
 		fmt.Println("Catatan tidak ditemukan.")
@@ -86,6 +89,7 @@ func munculcariCatatan(catatan *tabCatatan, lastID int){
 	fmt.Println("Judul   :", (*catatan)[index].Judul)
     fmt.Println("Tanggal :", (*catatan)[index].tanggal.Format("02-01-2006"))
     fmt.Println("Isi     :", (*catatan)[index].Isi)
+	backtomenu()
 	clearScreen()
 
 }
@@ -132,12 +136,13 @@ func editCatatan(catatan *tabCatatan, lastID int) {
 
 	(*catatan)[index] = Catatan{Judul: judulBaru, Isi: isiBaru, tanggal: tanggallama}
 	fmt.Println("Catatan berhasil diedit.")
-	clearScreen()
+	backtomenu()
 }
 
 func hapusCatatan(catatan *tabCatatan, lastID *int) {
 	if *lastID == 0 {
 		fmt.Println("Belum ada catatan.")
+		clearScreen()
 		return
 	}
 
@@ -151,6 +156,7 @@ func hapusCatatan(catatan *tabCatatan, lastID *int) {
 	index := cariCatatan(*catatan, *lastID, judulCari)
 	if index == -1 {
 		fmt.Println("Catatan tidak ditemukan.")
+		clearScreen()
 		return
 	}
 
@@ -160,7 +166,7 @@ func hapusCatatan(catatan *tabCatatan, lastID *int) {
 	*lastID--
 
 	fmt.Println("Catatan berhasil dihapus.")
-	clearScreen()
+	backtomenu()
 }
 
 func tampilCatatan(catatan *tabCatatan, lastID int) {
@@ -181,7 +187,7 @@ func tampilCatatan(catatan *tabCatatan, lastID int) {
     } else if Pilihan == "terlama" {
         SelectionSortCatatanNaik(catatan, lastID)
     } else {
-        fmt.Println("Jawab cing baleg hama")
+        fmt.Println("Tidak valid ketik (terbaru/terlama)'")
         return
     }
 
@@ -192,6 +198,7 @@ func tampilCatatan(catatan *tabCatatan, lastID int) {
         fmt.Println("Tanggal :", (*catatan)[i].tanggal.Format("02-01-2006"))
         fmt.Println("Isi     :", (*catatan)[i].Isi)
     }
+	backtomenu()
 }
 
 
